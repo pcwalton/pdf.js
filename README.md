@@ -6,18 +6,24 @@ Steps:
 
 2. Symlink the `pkg` directory into `web`:
 
+    ```
     $ mkdir -p pathfinder/web_canvas/pkg
     $ ln -s `pwd`/pathfinder/web_canvas/pkg pdf.js/web/pathfinder_web_canvas
+    ```
 
 3. Build Pathfinder:
 
+    ```
     $ cd pathfinder/web_canvas
     $ wasm-pack build --target=web
+    ```
 
 4. Run a local web server:
 
+    ```
     $ cd pdf.js
     $ gulp server
+    ```
 
 5. Navigate to http://localhost:8888.
 
