@@ -35,6 +35,7 @@ var mimeTypes = {
   ".log": "text/plain",
   ".bcmap": "application/octet-stream",
   ".properties": "text/plain",
+  ".wasm": "application/wasm",
 };
 
 var defaultMimeType = "application/octet-stream";

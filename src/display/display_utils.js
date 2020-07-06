@@ -34,6 +34,7 @@ class DOMCanvasFactory {
       throw new Error("Invalid canvas size");
     }
     const canvas = document.createElement("canvas");
+    console.log("DOMCanvasFactory::create()");
     const context = canvas.getContext("2d");
     canvas.width = width;
     canvas.height = height;

@@ -30,6 +30,7 @@ import {
 } from "pdfjs-lib";
 import { RenderingStates } from "./pdf_rendering_queue.js";
 import { viewerCompatibilityParams } from "./viewer_compatibility.js";
+import { createContext } from "./pathfinder_web_canvas/pathfinder_web_canvas.js";
 
 /**
  * @typedef {Object} PDFPageViewOptions
@@ -108,6 +109,7 @@ class PDFPageView {
     this.annotationLayer = null;
     this.textLayer = null;
     this.zoomLayer = null;
+    this.cachedCanvas = null;
 
     const div = document.createElement("div");
     div.className = "page";
@@ -156,6 +158,8 @@ class PDFPageView {
     if (removeFromDOM) {
       // Note: `ChildNode.remove` doesn't throw if the parent node is undefined.
       this.zoomLayer.remove();
+      this.cachedCanvas = zoomLayerCanvas;
+      this.cachedCanvas._cachedContext.pfClear();
     }
     this.zoomLayer = null;
   }
@@ -562,7 +566,17 @@ class PDFPageView {
     };
 
     const viewport = this.viewport;
-    const canvas = document.createElement("canvas");
+    let canvas, ctx;
+    if (this.cachedCanvas) {
+      canvas = this.cachedCanvas;
+      ctx = canvas._cachedContext;
+      this.cachedCanvas = null;
+    } else {
+      canvas = document.createElement("canvas");
+      // FIXME(pcwalton): Expandos on DOM objects are probably not the best way to do this...
+      ctx = canvas._cachedContext = createContext(canvas);
+    }
+
     this.l10n
       .get("page_canvas", { page: this.id }, "Page {{page}}")
       .then(msg => {
@@ -574,6 +588,7 @@ class PDFPageView {
     canvas.setAttribute("hidden", "hidden");
     let isCanvasHidden = true;
     const showCanvas = function () {
+      ctx.pfFlush();
       if (isCanvasHidden) {
         canvas.removeAttribute("hidden");
         isCanvasHidden = false;
@@ -590,7 +605,6 @@ class PDFPageView {
       canvas.mozOpaque = true;
     }
 
-    const ctx = canvas.getContext("2d", { alpha: false });
     const outputScale = getOutputScale(ctx);
     this.outputScale = outputScale;
 

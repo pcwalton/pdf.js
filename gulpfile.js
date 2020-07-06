@@ -211,7 +211,7 @@ function createWebpackConfig(defines, output) {
           // `web-streams-polyfill` (already using a transpiled file), and
           // `src/core/{glyphlist,unicode}.js` (Babel is too slow for those)
           // should be excluded from processing.
-          exclude: /(node_modules[\\\/]core-js|node_modules[\\\/]web-streams-polyfill|src[\\\/]core[\\\/](glyphlist|unicode))/,
+          exclude: /(node_modules[\\\/]core-js|node_modules[\\\/]web-streams-polyfill|src[\\\/]core[\\\/](glyphlist|unicode))|(\.wasm$)/,
           options: {
             presets: skipBabel ? undefined : ["@babel/preset-env"],
             plugins: [
@@ -234,6 +234,7 @@ function createWebpackConfig(defines, output) {
         },
         {
           loader: path.join(__dirname, "external/webpack/pdfjsdev-loader.js"),
+          exclude: /\.wasm$/,
           options: {
             rootPath: __dirname,
             saveComments: false,

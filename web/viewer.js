@@ -15,6 +15,9 @@
 
 "use strict";
 
+// FIXME(pcwalton): This is probably not the best place to do this!
+import initPFWebCanvas from "./pathfinder_web_canvas/pathfinder_web_canvas.js";
+
 if (typeof PDFJSDev !== "undefined" && PDFJSDev.test("CHROME")) {
   var defaultUrl; // eslint-disable-line no-var
 
@@ -185,7 +188,7 @@ function getViewerConfiguration() {
   };
 }
 
-function webViewerLoad() {
+function realWebViewerLoad() {
   const config = getViewerConfiguration();
   if (typeof PDFJSDev === "undefined" || !PDFJSDev.test("PRODUCTION")) {
     Promise.all([
@@ -229,6 +232,10 @@ function webViewerLoad() {
 
     pdfjsWebApp.PDFViewerApplication.run(config);
   }
+}
+
+function webViewerLoad() {
+  initPFWebCanvas().then(() => realWebViewerLoad());
 }
 
 if (
