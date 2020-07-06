@@ -1,3 +1,26 @@
+# Pathfinder
+
+Steps:
+
+1. Check out Pathfinder next to pdf.js
+
+2. Symlink the `pkg` directory into `web`:
+
+    $ mkdir -p pathfinder/web_canvas/pkg
+    $ ln -s `pwd`/pathfinder/web_canvas/pkg pdf.js/web/pathfinder_web_canvas
+
+3. Build Pathfinder:
+
+    $ cd pathfinder/web_canvas
+    $ wasm-pack build --target=web
+
+4. Run a local web server:
+
+    $ cd pdf.js
+    $ gulp server
+
+5. Navigate to http://localhost:8888.
+
 # PDF.js [![Build Status](https://travis-ci.org/mozilla/pdf.js.svg?branch=master)](https://travis-ci.org/mozilla/pdf.js)
 
 [PDF.js](https://mozilla.github.io/pdf.js/) is a Portable Document Format (PDF) viewer that is built with HTML5.
